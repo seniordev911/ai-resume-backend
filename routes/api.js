@@ -144,22 +144,20 @@ router.post("/generate", async (req, res) => {
           lastError?.message || lastError?.error?.message || "Unknown error";
 
         if (errorStatus === 403) {
-          return NextResponse.json(
+          return res.status(403).json(
             {
               error: `OpenAI API access denied. Your account may not have access to the requested models. Tried: ${openaiModelsToTry.join(
                 ", "
               )}. Error: ${errorMessage}. Please check your OpenAI account access or try a different model in OPENAI_MODEL.`,
-            },
-            { status: 403 }
+            }
           );
         }
         if (errorStatus === 401) {
-          return NextResponse.json(
+          return res.status(401).json(
             {
               error:
                 "OpenAI API authentication failed. Please check your OPENAI_API_KEY in .env.local.",
-            },
-            { status: 401 }
+            }
           );
         }
         // Re-throw other errors to be handled by outer catch
@@ -229,22 +227,20 @@ router.post("/generate", async (req, res) => {
           lastError?.message || lastError?.error?.message || "Unknown error";
 
         if (errorStatus === 403) {
-          return NextResponse.json(
+          return res.status(403).json(
             {
               error: `Anthropic API access denied. Your account may not have access to the requested models. Tried: ${modelsToTry.join(
                 ", "
               )}. Error: ${errorMessage}. Please check your Anthropic account access or try a different model in ANTHROPIC_MODEL.`,
-            },
-            { status: 403 }
+            }
           );
         }
         if (errorStatus === 401) {
-          return NextResponse.json(
+          return res.status(401).json(
             {
               error:
                 "Anthropic API authentication failed. Please check your ANTHROPIC_API_KEY in .env.local.",
-            },
-            { status: 401 }
+            }
           );
         }
         // Re-throw other errors to be handled by outer catch
@@ -274,12 +270,11 @@ router.post("/generate", async (req, res) => {
     } catch (parseError) {
       // If parsing fails, return a structured error response
       console.error("Failed to parse JSON response:", jsonText);
-      return NextResponse.json(
+      return res.status(500).json(
         {
           error: "Failed to parse AI response",
           rawResponse: jsonText,
-        },
-        { status: 500 }
+        }
       );
     }
 
